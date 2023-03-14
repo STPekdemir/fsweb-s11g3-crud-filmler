@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { nanoid } from "nanoid";
 
 import axios from "axios";
 
-const EditMovieForm = (props) => {
+const AddMovieForm = (props) => {
   const { push } = useHistory();
-
-  let { id } = useParams();
 
   const { setMovies } = props;
 
@@ -17,6 +16,7 @@ const EditMovieForm = (props) => {
     genre: "",
     metascore: 0,
     description: "",
+    id: nanoid(),
   });
 
   const handleChange = (e) => {
@@ -29,10 +29,10 @@ const EditMovieForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:9000/api/movies/${id}`, movie)
+      .post(`http://localhost:9000/api/movies`, movie)
       .then((res) => {
         setMovies(res.data);
-        push(`/movies/${id}`);
+        push(`/movies`);
       })
       .catch((err) => {
         console.log(err);
@@ -40,16 +40,6 @@ const EditMovieForm = (props) => {
   };
 
   const { title, director, genre, metascore, description } = movie;
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:9000/api/movies/${id}`)
-      .then((res) => {
-        console.log("resdata", res.data);
-        setMovie(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
 
   return (
     <div className="bg-white rounded-md shadow flex-1">
@@ -123,4 +113,4 @@ const EditMovieForm = (props) => {
   );
 };
 
-export default EditMovieForm;
+export default AddMovieForm;
